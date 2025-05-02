@@ -1,0 +1,78 @@
+🧑‍💻 Självständiga SQL-övningar – CRUD + SELECT + filter
+
+🧠 Mål:
+Öva på att skapa tabeller
+
+Skriva och köra CRUD-kommandon
+
+Filtrera och sortera data med SQL
+
+🟢 Lätt nivå
+1. Skapa databas & tabell
+
+Skapa en ny databas övningdb.
+
+Skapa en users tabellen som vi gjorde under lektionen.
+
+Skapa en tabell products med följande kolumner:
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  price INTEGER
+);
+
+2. Utför CRUD-operationer (pgAdmin).
+Lägg till fler användare och produkter.
+Koppla fler produkter till olika users.
+
+3. Lägg till en ny kolumn age INTEGER i tabellen users.
+
+4. Hämta all data
+
+5. Skriv en SELECT-fråga som visar alla produkter och en som visar alla användare:
+
+6. Bygg egna små SELECT/UPDATE/DELETE-frågor.
+
+🟠 Medel nivå
+
+1. Skapa Express-routes för GET och POST för tabellen products.
+
+2. Skapa en Express-route för DELETE-användare (DELETE /users/:id).
+
+3. Filtrera data med WHERE
+
+Hämta bara produkter som kostar mer än 1000 kr.
+
+4. Sortera resultat
+
+Sortera alla produkter efter pris, dyrast först.
+
+5.Uppdatera ett pris
+
+Ändra priset på "Skärm" till 2700 kr.
+
+🔴 Svår nivå
+1. Filtrera & begränsa
+
+Hämta de 2 billigaste produkterna som kostar över 500 kr.
+
+2. Lägg till ny kolumn + uppdatera
+
+Lägg till en kolumn in_stock (boolean), uppdatera värde på minst 2 produkter.
+
+3. Ta bort data
+
+Ta bort alla produkter som inte finns i lager.
+
+4. Skapa en orders-tabell och koppla ihop med products via foreign key.
+
+5. Implementera Express-endpoints för orders där man kan lägga till och hämta ordrar.
+
+-----------------------------
+-----------------------------
+-----------------------------
+🎁 Extra resurser till studenter
+
+db-fiddle.com för att testa SQL-queries online.
+
+draw.io, Lucidchart eller DBeaver för ER-diagram.

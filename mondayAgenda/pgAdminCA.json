@@ -1,0 +1,67 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  email VARCHAR(50)
+);
+
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  price INTEGER
+);
+
+INSERT INTO users (name, email) VALUES ('Anna', 'anna@test.se');
+INSERT INTO products (name, price) VALUES ('Laptop', 12000);
+
+SELECT * FROM users;
+SELECT * FROM products;
+
+UPDATE users SET name='Anna Svensson' WHERE id=1;
+UPDATE products SET price=10000 WHERE id=1;
+
+-- När du skapar FOREIGN KEY kan du lägga till:
+ALTER TABLE products ADD COLUMN user_id INTEGER;
+ALTER TABLE products ADD FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- Nu kan du sätta user_id på produkterna!
+UPDATE products SET user_id = 1 WHERE id = 1;
+
+-- FEL!
+-- DELETE FROM users WHERE id=1;
+-- DELETE FROM products WHERE id=1;
+
+-- Rätt alternativ 1:
+UPDATE products SET user_id = NULL WHERE user_id = 1;
+"Vi bryter länken till användaren först."
+-- ✅ 2. Nu kan du ta bort användaren
+DELETE FROM users WHERE id = 1;
+
+-- Rätt alternativ 2:
+-- Radera alla produkter som ägs av användaren först.
+-- Om du vill radera allt kopplat till användaren:
+-- DELETE FROM products WHERE user_id = 1;
+-- DELETE FROM users WHERE id = 1;
+
+-- Alternativ 3 (avancerat sätt):
+-- Automatiskt ta bort produkter när användare raderas
+-- (Detta måste du förbereda i ALTER TABLE-steget)
+-- ALTER TABLE products
+-- ADD CONSTRAINT fk_user FOREIGN KEY (user_id)
+-- REFERENCES users(id)
+-- ON DELETE CASCADE;
+-- 💬 Vad gör ON DELETE CASCADE?
+-- Om du tar bort en användare → tar PostgreSQL automatiskt bort alla produkter som pekade på den användaren.
+
+-- VIKTIGT!:
+-- När du har foreign keys:
+-- Du måste tänka på relationer innan du tar bort något.
+-- Databasen skyddar dig från att "tappa bort" kopplad data.
+-- Därför kan vi behöva nollställa, rensa, eller använda ON DELETE CASCADE.
+
+
+
+SELECT products.name, products.price, users.name AS owner
+FROM products
+JOIN users ON products.user_id = users.id;
+
+
