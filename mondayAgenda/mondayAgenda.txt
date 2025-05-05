@@ -1,0 +1,150 @@
+🧾 Lektionsplanering – Måndag 12 maj 2025
+⏰ Tid: 09.00–12.00
+🎯 Fokus: Ansluta Express-API till PostgreSQL med pg-modulen
+🧠 Pedagogiskt fokus: steg-för-steg genomgång av fullständig integration → låt studenterna bygga vidare praktiskt
+
+-----------------------------
+🎯 Syfte
+
+Förstå hur man kopplar ett Node.js/Express-API till en PostgreSQL-databas
+
+Kunna läsa, skriva, uppdatera och ta bort data från databasen via API-anrop (CRUD)
+
+Få praktisk erfarenhet av pg-modulen för databasanslutning
+
+-----------------------------
+🧠 Agenda
+
+09.00–09.15	👋 Intro & teori	Vad är pg-modulen? Hur fungerar anslutning till PostgreSQL från Express?
+09.15–10.15	💻 Code-Along 1	Initiera Express-projekt, installera pg, skapa anslutning, GET/POST-rutter
+10.15–10.25	☕ Paus	
+10.25–11.10	💻 Code-Along 2	Bygg vidare på PUT, DELETE, och felhantering
+11.10–11.50	🧑‍💻 Självständig övning	Skapa eget API med minst två entiteter, CRUD och PostgreSQL-koppling
+11.50–12.00	🔁 Reflektion & frågor	Kort diskussion i helklass: vad kändes svårt? Hur hänger allt ihop?
+
+-----------------------------
+🧠 TEORI – TALARMANUS
+
+🗣️ Vad är pg?
+
+"pg är ett Node.js-paket som gör det möjligt att kommunicera med PostgreSQL direkt från vår server. Vi kan t.ex. skicka SQL-frågor från våra API-rutter."
+
+🗣️ Hur fungerar kopplingen?
+
+"Vi skapar en client eller pool, kopplar mot databasens URL och använder t.ex. client.query() för att köra SQL."
+
+🗣️ Varför bygga ett API ovanpå databasen?
+
+"För att frontend (t.ex. React) ska kunna prata med databasen måste vi bygga en mellanliggande server (API) som hanterar logiken."
+
+-----------------------------
+📚 Viktiga begrepp att förklara:
+
+- **REST API** – ett sätt att strukturera endpoints för att hämta/skicka data
+
+- **pg (node-postgres)** – modul för att skicka SQL-frågor från Node.js
+
+- **Pool vs. Client** – Pool = återanvändbara anslutningar, Client = enskild anslutning
+
+- **Request Body** – data som skickas med POST/PUT i t.ex. JSON
+
+- **Statuskoder** – t.ex. 200 OK, 201 Created, 404 Not Found, 500 Internal Server Error
+
+- **REST API** – ett sätt att strukturera endpoints för att hämta/skicka data
+- **pg (node-postgres)** – modul för att skicka SQL-frågor från Node.js
+- **Pool vs. Client** – Pool = återanvändbara anslutningar, Client = enskild anslutning
+- **Request Body** – data som skickas med POST/PUT i t.ex. JSON
+- **Statuskoder** – t.ex. 200 OK, 201 Created, 404 Not Found, 500 Internal Server Error
+
+- Vad är Prepared Statements och varför använder vi $1, $2?
+const result = await pool.query(`SELECT * FROM users WHERE name = '${userInput}'`);
+
+...då kan en illvillig användare skriva något som:
+' OR 1=1; --
+
+Vilket ger:
+SELECT * FROM users WHERE name = '' OR 1=1; --'
+
+➡️ Det här returnerar alla användare och kan äventyra säkerheten.
+
+✅ Lösning: Prepared Statements
+När vi istället skriver:
+const result = await pool.query(
+  "SELECT * FROM users WHERE name = $1",
+  [userInput]
+);
+
+$1 är en placeholder
+
+[userInput] är en värdelista
+
+pg hanterar insättningen säkert, automatiskt sanerat
+
+➡️ Det skyddar mot SQL-injektion, eftersom frågan kompileras innan data sätts in.
+
+-----------------------------
+Grundläggande ämnen/keyword/syntax:
+
+- `app.get()`, `app.post()`, `app.put()`, `app.delete()` – REST-metoder i Express
+
+- `req.params`, `req.body` – data från URL respektive request body
+
+- `pool.query()` – skickar SQL-fråga till databasen
+
+- `await`/`async` – hanterar asynkron kommunikation
+
+- `try/catch` – fångar och hanterar fel
+
+- `RETURNING *` – returnerar ny/uppdaterad rad från INSERT/UPDATE/DELETE
+
+-----------------------------
+-----------------------------
+-----------------------------
+💻 CODE-ALONG
+
+Del 1: Setup & GET/POST
+
+npm init -y
+npm install express pg
+
+Skapa index.js:
+
+Genomför den koden.
+
+-----------------------------
+Del 2: PUT, DELETE & felhantering
+
+fortsätt i index.js:
+
+Genomför den koden.
+
+-----------------------------
+-----------------------------
+Del 3: Testa alla routes med Postman
+
+🧪 Visa hur man:
+
+- Gör en GET-förfrågan till `/users`
+
+- Gör en POST-förfrågan till `/users` med JSON-body:
+
+  {
+    "name": "Lisa",
+    "email": "lisa@example.com"
+  }
+
+- Gör en PUT till `/users/:id` med ny data
+
+- Gör en DELETE till `/users/:id`
+
+-----------------------------
+-----------------------------
+-----------------------------
+🧑‍💻 SJÄLVSTÄNDIGA ÖVNINGAR 
+
+-----------------------------
+-----------------------------
+-----------------------------
+🔁 Gruppdiskussion:
+
+
