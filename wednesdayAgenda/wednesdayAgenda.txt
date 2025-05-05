@@ -1,0 +1,192 @@
+🧾 Lektionsplanering – Onsdag 7 maj 2025
+⏰ Tid: 09.00–12.00
+🎯 Fokus: datamodellering, ER-diagram, relationstyper och översättning till SQL
+🧠 Pedagogiskt fokus: bygga förståelse genom visualisering → direkt till praktisk tillämpning
+
+-----------------------------
+🎯 Syfte
+
+Förstå varför datamodellering är viktigt innan man skriver SQL
+
+Känna till skillnaderna mellan olika relationstyper (1–1, 1–M, M–M)
+
+Kunna tolka och skapa egna ER-diagram
+
+Översätta ett ER-diagram till korrekt SQL-syntax i PostgreSQL
+
+-----------------------------
+🧠 Agenda
+
+09.00–09.15	👋 Intro & Teori	Vad är datamodellering och ER-diagram? Syfte och exempel
+09.15–09.50	📐 Teori + walkthrough	Entiteter, attribut, relationer. 1–M, M–M, junction-tabeller. Rita gemensamt exempel
+09.50–10.20	💻 Code-Along 1	Skapa ER-diagram i dbdiagram.io (eller annat verktyg)
+10.20–10.30	☕ Paus	
+10.30–11.00	💻 Code-Along 2	Översätt ER-diagrammet till SQL i PostgreSQL/pgAdmin
+11.00–11.50	🧑‍💻 Självständig övning	Rita eget ER-diagram, översätt till tabeller och skapa dem
+11.50–12.00	🔁 Reflektion & frågor	Kort diskussion i helklass kring modelleringens utmaningar
+
+-----------------------------
+🧠 TEORI – TALARMANUS
+
+🗣️ Vad är datamodellering?
+
+"Datamodellering är processen att planera hur data ska organiseras innan vi skapar tabeller. Det hjälper oss att förstå vilka entiteter vi har, hur de hänger ihop och vilka relationer som finns mellan dem."
+
+🗣️ Vad är ett ER-diagram?
+
+"ER står för Entity-Relationship. Det är ett visuellt sätt att visa hur tabeller (entiteter) hänger ihop med varandra via relationer. Varje entitet har attribut, alltså kolumner i tabellen."
+
+🗣️ Vad är en relation?
+
+1–1: En användare har ett pass
+
+1–M: En kund kan göra flera beställningar
+
+M–M: Studenter kan gå flera kurser, kurser har flera studenter ⇒ junction-tabell krävs
+
+🗣️ Varför översätta till SQL?
+
+"När vi har ritat klart vår modell, blir nästa steg att faktiskt implementera den med CREATE TABLE och FOREIGN KEY i PostgreSQL."
+
+-----------------------------
+📚 Viktiga begrepp att förklara:
+
+- **Entitet** – verkligt objekt, t.ex. student, bok, beställning.
+
+- **Attribut** – en kolumn i en tabell, t.ex. namn, e-post, pris.
+
+- **Primärnyckel (Primary Key)** – unik identifierare per rad.
+
+- **Främmande nyckel (Foreign Key)** – koppling till annan tabells primärnyckel.
+
+- **Kardinalitet** – hur många entiteter som är kopplade till en annan.
+
+- **Normalisering** – att strukturera data så att duplicering undviks.
+
+- **Junction-tabell** – används för att hantera many-to-many-relationer.
+
+- **Datatyper** – t.ex. `VARCHAR`, `INTEGER`, `DATE`, `BOOLEAN`.
+
+-----------------------------
+Grundläggande ämnen/keyword/syntax:
+
+🧩 Syntax att ha koll på i PostgreSQL:
+
+- `CREATE TABLE`
+- `SERIAL`, `INTEGER`, `VARCHAR(n)`
+- `PRIMARY KEY`, `FOREIGN KEY`
+- `REFERENCES table(column)`
+- Kombinerad primärnyckel: `PRIMARY KEY (a, b)`
+- Notation i dbdiagram.io: `[pk]`, `[ref: > tabell.kolumn]`
+
+Tips:
+- dbdiagram.io använder en enklare syntax men exporterar till PostgreSQL
+- I junction-tabeller definieras båda FK + kombinerad PK
+
+-----------------------------
+-----------------------------
+-----------------------------
+💻 CODE-ALONG
+
+Del 1: Skapa ER-diagram
+
+🛠️ Verktyg: dbdiagram.io (alternativt Lucidchart, DBeaver, draw.io)
+
+🧠 Mål med momentet:
+Förstå hur man strukturerar en datamodell visuellt
+
+Lära sig använda ER-diagram för att planera relationer
+
+Identifiera och hantera many-to-many-relationer via junction-tabeller
+
+🗂️ Exempel – modellera en "Skola":
+
+3 tabeller:
+- students (id, name, email)
+
+- courses (id, title, credits)
+
+- enrollments (student_id, course_id) ← junction-tabell
+
+Skapa ett konto (valfritt, men bra för att spara modeller)
+
+Klicka på “New Diagram”
+
+Använd följande databasdefinition (notationen är lik SQL):
+
+Table students {
+  id serial [pk]
+  name varchar
+  email varchar
+}
+
+Table courses {
+  id serial [pk]
+  title varchar
+  credits int
+}
+
+Table enrollments {
+  student_id int [ref: > students.id]
+  course_id int [ref: > courses.id]
+  [pk: student_id, course_id]
+}
+
+🗣️ Talarmanus – Junction-tabell:
+"I många verkliga system har vi many-to-many-relationer.
+Tänk er att en student kan gå flera kurser, och en kurs har flera studenter.
+Om vi försökte lösa detta direkt i students eller courses-tabellen, skulle det bli rörigt – vi kan inte ha flera course_id i en cell.
+
+Lösningen är att skapa en tredje tabell – en så kallad junction-tabell eller mellan-tabell – som bara innehåller kopplingarna.
+I vårt exempel heter den enrollments och innehåller student_id och course_id.
+Detta gör modellen både normaliserad och skalbar."
+
+-----------------------------
+Del 2: Översätt till SQL i pgAdmin
+
+CREATE TABLE students (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100)
+);
+
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(100),
+  credits INTEGER
+);
+
+// junction-tabell
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  PRIMARY KEY (student_id, course_id),
+  FOREIGN KEY (student_id) REFERENCES students(id),
+  FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+-----------------------------
+-----------------------------
+-----------------------------
+🧑‍💻 SJÄLVSTÄNDIG ÖVNING – tre nivåer
+
+📋 Studenterna väljer ett av tre scenarier och:
+
+Ritar ER-diagram (verktyg valfritt)
+
+Översätter till SQL
+
+Skapar tabeller i PostgreSQL
+
+-----------------------------
+-----------------------------
+-----------------------------
+🔁 Gruppdiskussion:
+
+Vad händer om vi vill lagra fler saker i junction-tabellen? (ex: betyg, datum för registrering)
+
+Vad betyder det att en tabell bara innehåller foreign keys?
+
+Vad innebär det att sätta en kombinerad primary key?
+
+Vilken är den största risken med att inte modellera sin databas innan man börjar skriva SQL?
