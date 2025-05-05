@@ -155,9 +155,12 @@ CREATE TABLE products (
   price INTEGER
 );
 
-"Här skapade vi tabellen products med en foreign key (user_id) som pekar på användarnas id."
+"Här skapar vi tabellen products.
 
 Nu har vi användare och produkter, men hur kopplar vi ihop dem? Vi gör detta genom att lägga till en så kallad foreign key. Det betyder att varje produkt kan kopplas till en användare.
+
+
+ med en foreign key (user_id) som pekar på användarnas id.
 
 ⚙️ Execute stegvis i pgAdmin:
 ALTER TABLE products ADD COLUMN user_id INTEGER;
