@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# Miljöfiler (innehåller API-nycklar m.m.)
+.env
+
+# Loggar
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specifika filer
+.DS_Store
+Thumbs.db
+
+# PostgreSQL dumps eller tillfälliga filer
+*.sql
+*.dump
+
+# VS Code inställningar (valfritt)
+.vscode/
+
+# pgAdmin filer (om du exporterar inställningar)
+.pgadmin4.*
+
+# Byggmappar (om du använder TypeScript eller bundlers)
+dist/
+build/

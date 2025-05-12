@@ -1,0 +1,25 @@
+{
+  "name": "jsd24-databaser-25yhp-vecka1",
+  "version": "1.0.0",
+  "description": "Vecka 1 Ämne: Del1: Repetition, Del 2: Relationsdatabaser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Folkuniversitetet-JSD24/jsd24-Databaser-25yhp-vecka1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Folkuniversitetet-JSD24/jsd24-Databaser-25yhp-vecka1/issues"
+  },
+  "homepage": "https://github.com/Folkuniversitetet-JSD24/jsd24-Databaser-25yhp-vecka1#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.15.6"
+  }
+}
