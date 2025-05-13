@@ -1,0 +1,134 @@
+🧩 Självständiga övningar 
+
+🟢 Lätt nivå
+
+- Läs från databas med JOIN + json_agg
+
+Scenario:
+Du ska hämta alla användare tillsammans med deras registrerade kurser.
+
+Uppgift:
+1. Använd GET /users-endpointen du byggt.
+
+2. Förklara vad json_agg gör och hur GROUP BY används i din kod.
+
+3. Lägg till en ny användare i Postman med 2 kurser, t.ex. med courseIds: [1, 2].
+
+4. Bekräfta resultatet i Postman och pgAdmin (i junction-tabellen user_courses).
+
+--------------------------------
+– Kontrollera innehållet i junction-tabellen
+
+Uppgift:
+1. Öppna pgAdmin och välj user_courses
+
+2. Välj "View/Edit Data → All Rows"
+
+3. Besvara:
+    - Hur många kopplingar finns?
+    - Vilka user_id har kurs_id 1?
+
+4. Gör samma kontroll i Postman med GET /users – stämmer datan?
+
+🧠 Syfte: Få förståelse för hur en many-to-many-relation faktiskt lagras och visualiseras.
+
+--------------------------------
+--------------------------------
+--------------------------------
+🟠 Medel nivå
+
+1. Bygg en ny endpoint med JOIN
+
+Scenario:
+Du vill kunna hämta alla kurser, och för varje kurs se vilka användare som är registrerade.
+
+Uppgift:
+1. Skapa en ny GET-endpoint: GET /courses/full
+
+2. Skriv en SQL-fråga som använder json_agg(users.*) för att gruppera användare per kurs.
+
+3. Testa att köra anropet i Postman och säkerställ att det returnerar kurser och tillhörande användare i JSON-format.
+
+Bonus:
+Visa resultatet i pgAdmin – vilka användare är kopplade till respektive kurs?
+
+--------------------------------
+2. Uppdatera en användares e-post
+
+Scenario:
+En användare har bytt e-post och du vill uppdatera den i databasen.
+
+Uppgift:
+    - Lägg till en ny endpoint: PUT /users/:id
+    - Endpointen ska uppdatera namn och e-post för en användare baserat på req.body
+    - Skriv SQL-fråga med UPDATE users SET ... WHERE id = $1
+    - Testa i Postman:
+    PUT /users/1
+{
+  "name": "Student Studentsson",
+  "email": "Student.Studentsson@example.com"
+}
+
+    - Verifiera ändringen i pgAdmin
+
+🧠 Syfte: Träna UPDATE och att kombinera Express + SQL
+
+--------------------------------
+--------------------------------
+--------------------------------
+🔴 Svår nivå
+
+1. Lägg till DELETE med transaktion
+
+Scenario:
+Du vill ta bort en användare OCH samtidigt ta bort kopplingen till kurser i samma transaktion.
+
+Uppgift:
+- Skapa en DELETE-endpoint: DELETE /users/:id
+
+- I funktionen:
+    1. Använd BEGIN
+    2. Ta först bort poster i user_courses för användaren
+    3. Ta sedan bort användaren från users
+    4. Använd COMMIT
+    5. Vid fel, gör ROLLBACK
+
+- Bekräfta att det fungerar via Postman och pgAdmin.
+
+--------------------------------
+– Bygg en GET /users/:id
+
+Scenario:
+Du vill kunna visa detaljerad information om en specifik användare, inklusive kurser.
+
+Uppgift:
+    - Skapa ny route: GET /users/:id
+    - SQL-frågan ska hämta användaren med tillhörande kurser via json_agg(...)
+    - Returnera struktur:
+{
+  "id": 1,
+  "name": "Student",
+  "email": "Student@example.com",
+  "courses": [
+    { "id": 1, "title": "JavaScript", ... },
+    { "id": 2, "title": "Node.js", ... }
+  ]
+}
+    - Testa i Postman med olika id
+
+🧠 Syfte: Djupare förståelse för parameterhantering, SQL-förfining och exakt dataåtkomst
+
+-------------------------------
+-------------------------------
+-------------------------------
+🔁 Gruppdiskussion 
+
+Vad är en transaktion och varför används BEGIN/COMMIT/ROLLBACK?
+
+Vad är fördelen med many-to-many-relationer jämfört med one-to-many?
+
+Hur hjälper JOIN oss att kombinera data från flera tabeller?
+
+Vilka utmaningar finns med many-to-many relationer?
+
+När är det bra att använda subqueries vs JOINs?

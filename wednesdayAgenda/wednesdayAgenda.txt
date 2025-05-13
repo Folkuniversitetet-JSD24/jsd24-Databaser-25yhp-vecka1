@@ -1,0 +1,218 @@
+🚀 Lektionsplanering – Onsdag 14 maj 2025
+🕘 Tid: 09.00–12.00 (3 timmar)
+🎯 Ämne: Databasmodellering: one-to-many, many-to-many, relationer, normalisering & avancerade SQL-queries.
+
+-----------------------------
+🎯 Syfte
+
+Efter lektionen ska studenterna kunna:
+Förstå komplexa relationer (one-to-many, many-to-many).
+
+Använda SQL-transaktioner (BEGIN, COMMIT, ROLLBACK).
+
+Utföra avancerade queries med JOIN, json_agg, GROUP BY
+
+Bygga ett backendflöde i Express som är kopplat till en PostgreSQL-databas
+
+-----------------------------
+🧠 Agenda
+
+Intro & målsättning	Vad vi ska uppnå
+💻 Code-Along – setup-db.js	Modellering + SQL-kod (users, courses, user_courses + indexering)
+pgAdmin-visualisering	Verifiera tabeller, relationer & index
+📦 CRUD: Users + Courses + Routers	Vi bygger users.js och courses.js
+Test & visualisering	Postman, pgAdmin, logik bakom json_agg, responsformat
+Gruppdiskussion & reflektion	Se nedan →
+
+-----------------------------
+-----------------------------
+-----------------------------
+💻 Code-Along: Relationshantering & Avancerade SQL-frågor
+
+🗃️ Databasstruktur (Projektidé: Kursplattform)
+users ↔ courses (many-to-many)
+
+Junction-tabell: user_courses
+
+-----------------------------
+🎬 Steg 1 – Förberedelser
+
+Förbered ett nytt projekt och skapa databas från pgAdmin:
+
+namn: advancedtestdbCA
+
+🗣️ Talarmanus:
+
+”Nu börjar vi med att skapa vår nya PostgreSQL-databas från pgAdmin.”
+
+Skapa ett nytt projekt:
+npm init -y
+npm install express pg dotenv
+
+2️⃣ Setup och anslutning till PostgreSQL
+
+Skapa .env-fil:
+
+Genomför den koden
+
+-----------------------------
+3️⃣ Avancerad SQL-modellering via kod 
+
+🗣️ Talarmanus:
+
+”Vi bygger nu en avancerad databasstruktur med one-many och many-to-many relationer. Vi använder en junction-tabell för att koppla ihop användare med kurser i en many-to-many relation.”
+
+Skapa setup-db.js med tabeller, relationer, transaktioner och index
+
+genomför den koden
+
+Kör filen i terminalen:
+node setup-db.js
+
+Kontrollera visuellt i pgAdmin:
+📌 1. Att alla tabeller är skapade
+
+users, courses, user_courses
+
+📌 2. Att relationerna finns
+
+Klicka på varje tabell → fliken Constraints → du ska se FOREIGN KEYS
+
+📌 3. Att dina index är skapade
+
+Öppna:
+Schemas → Tables → users → Indexes
+Schemas → Tables → user_courses → Indexes
+
+3B. Avancerad optimering & indexering
+
+🗣️ Talarmanus:
+
+”Index gör queries snabba. Använd alltid index för kolumner som används ofta i WHERE och JOIN.”
+
+Skapa index i setup-db.js:
+CREATE INDEX idx_user_email ON users(email);
+CREATE INDEX idx_user_courses_user_id ON user_courses(user_id);
+
+Förklara visuellt i pgAdmin under "Indexes".
+
+🗣️ Talarmanus:
+
+”Index är som innehållsförteckningen i en bok. De gör sökningar mycket snabbare eftersom databasen inte behöver läsa igenom hela tabellen. Här ser ni de index vi skapat på email och user_id.”
+
+-----------------------------
+ Talarmanus:
+
+”Nu har vi både relationsstrukturen och optimeringen på plats. Vi går vidare till att bygga det som faktiskt använder vår databas – API:et via Express!”
+
+4️⃣ Skapa index.js + Express server med routing och pool
+
+genomför den koden
+
+"Varför const pool behövs både i index.js och setup-db.js?
+setup-db.js:
+Används enbart för att skapa databasen initialt (engångskörning). Du avslutar poolen efter körning med pool.end();.
+
+index.js:
+Körs kontinuerligt för att hantera API-förfrågningar. Här används en egen pool som alltid hålls öppen.
+
+De behöver separata pools för att setup-db.js används en gång vid uppsättningen och sedan avslutas, medan index.js är igång hela tiden och hanterar HTTP-requests.
+
+-----------------------------
+4️⃣B. Kompletta CRUD-operationer via Express
+
+skapa router mappen och user.js
+
+genomför den koden.
+
+4C. Koppla routern i index.js
+
+4D.  Skapa routers/courses.js
+
+genomför den koden.
+
+Koppla routern i index.js
+
+-----------------------------
+5. Utförlig instruktion för test & visualisering (Postman & pgAdmin):
+
+🗣️ Talarmanus:
+
+”Nu testar vi API:et vi byggt. Vi använder Postman för att skicka requests och pgAdmin för att visuellt kontrollera databasen.”
+
+Först starta index.js i terminalen:
+node --watch index.js
+
+🧪 Testa med Postman:
+
+POST /courses → skapa ny kurs
+POST http://localhost:3000/courses
+{
+  "title": "Node.js",
+  "description": "Lär dig backendutveckling"
+}
+
+och:
+{
+  "title": "JavaScript",
+  "description": "Grunderna i JS"
+}
+
+GET /courses → hämta alla kurser
+GET http://localhost:3000/courses
+
+----------------
+
+POST (skapa användare + kurser):
+POST http://localhost:3000/users
+{
+  "name": "Mandus",
+  "email": "mandus@example.com",
+  "courseIds": [1, 2]
+}
+
+och:
+{
+  "name": "Mandu3333333333s",
+  "email": "mand3333333333us@example.com",
+  "courseIds": [2, 1]
+}
+
+Visa att en användare med kurser skapas och returneras.
+
+GET (hämta användare med kurser):
+GET http://localhost:3000/users
+
+Bekräfta att alla användare och deras associerade kurser returneras snyggt i JSON-format.
+
+🔍 Visuellt i pgAdmin:
+
+Öppna pgAdmin, navigera till advancedtestdb → högerklicka på tabellen users, user_courses och courses sen välj "View/Edit Data → All rows".
+
+Visa eleverna att data/användaren faktiskt skapats. OCH
+Att kopplingen skapats korrekt i junction-tabellen (user_courses).
+
+Gör samma sak för tabellerna courses och user_courses.
+
+Förklara kort relationerna och varför junction-tabellen behövs för många-till-många-relationen.
+🗣️ "Här ser vi att användaren kopplats till flera kurser via junction-tabellen."
+
+-----------------------------
+-----------------------------
+-----------------------------
+Dags för övningar
+
+-----------------------------
+-----------------------------
+-----------------------------
+🔁 Gruppdiskussion 
+
+Vad är en transaktion och varför används BEGIN/COMMIT/ROLLBACK?
+
+Vad är fördelen med many-to-many-relationer jämfört med one-to-many?
+
+Hur hjälper JOIN oss att kombinera data från flera tabeller?
+
+Vilka utmaningar finns med many-to-many relationer?
+
+När är det bra att använda subqueries vs JOINs?
